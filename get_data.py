@@ -23,12 +23,14 @@ def create_data(data_dir: str,
        Pipeline handle data. Download MNIST dataset and create dataloader instance.
        :param data_dir: path to data directory, if not exits, create
        :param train_transform: train image transformer
-       :param test_transform: test image transformer
-       :return: Tuple of train dataset and test dataset.
        :param num_workers:
        :param batch_size:
+       :return: Tuple of train dataloader
        """
     data_path_dir = Path(data_dir)
+
+    # Check data path is existed.
+    # If true, skip downloading.
     if data_path_dir.is_dir():
         print("Data has been created. Skip downloading...")
         train_dataset = MNIST(root=data_path_dir / "train",
@@ -60,6 +62,8 @@ def create_data(data_dir: str,
 
         print("Download successfully")
 
+
+    # Create dataloader
     class_names = train_dataset.classes
     train_dataloader = DataLoader(dataset=train_dataset,
                                   batch_size=batch_size,
