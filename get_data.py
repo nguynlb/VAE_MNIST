@@ -49,7 +49,6 @@ def create_data(data_dir: str,
 
         print("Download successfully")
 
-
     # Create dataloader
     class_names = train_dataset.classes
     train_dataloader = DataLoader(dataset=train_dataset,
