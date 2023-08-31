@@ -44,7 +44,10 @@ class VAE(nn.Module):
 def check():
     x = torch.ones(1, 1, 28, 28)
     model = VAE(h_dim=200, batch_size=1)
+    mean, std = model.encoder(x)
     assert model.forward(x)[0].shape == x.shape
-    assert model.encoder(x)[0].shape == (1, 200)
+    assert mean.shape == (1, 200)
+    assert model.reparameter_trick(mean, std).shape == mean.shape
+    print("OK")
 
 check()
