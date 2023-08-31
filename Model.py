@@ -50,4 +50,3 @@ def check():
     assert model.reparameter_trick(mean, std).shape == mean.shape
     print("OK")
 
-check()

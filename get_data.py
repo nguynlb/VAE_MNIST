@@ -4,7 +4,7 @@ from pathlib import Path
 
 import torch.cuda
 from torchvision.datasets import MNIST
-from torchvision.transforms import Compose
+from torchvision.transforms import Compose, ToTensor, Lambda
 from torch.utils.data import Dataset, DataLoader
 
 # Hyperparameter
@@ -58,3 +58,16 @@ def create_data(data_dir: str,
                                   pin_memory=True)
 
     return train_dataloader, class_names
+
+
+def simple_transform() -> Tuple[Compose, Compose]:
+    transforms = Compose([
+        ToTensor(),
+    ])
+    reverse_transforms = Compose([
+        Lambda(lambda x: x * 255),
+        Lambda(lambda x: x.permute(1, 2, 0))
+    ])
+
+    return transforms, reverse_transforms
+
