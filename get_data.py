@@ -62,10 +62,11 @@ def simple_transform() -> Tuple[Compose, Compose]:
     transforms = Compose([
         ToTensor(),
     ])
-    reverse_transforms = Compose([
+    reversed_transforms = Compose([
+
         Lambda(lambda x: x * 255),
         Lambda(lambda x: x.permute(1, 2, 0))
     ])
 
-    return transforms, reverse_transforms
+    return transforms, reversed_transforms
 

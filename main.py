@@ -1,15 +1,17 @@
 from argparse import ArgumentParser
 from get_data import create_data, simple_transform
 import torch.cuda
-from Model import VAE
+from model import VAE
 from train import train_loop
+from predict import generative_random_image
+from pathlib import Path
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="Config parameter and hyperparameter")
-    parser.add_argument("-lr", type=float, default=1e-4)
+    parser.add_argument("-lr", type=float, default=3e-4)
     parser.add_argument("--hidden-dim", "-hd", type=int, default=200)
     parser.add_argument("--disable-cuda", "-cpu", default=False, action="store_true")
-    parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--save-model", help="Directory to save model", metavar="L", default="./model")
     parser.add_argument("--dir", "-d", type=str, default='./data')
     parser.add_argument("--h-dim", type=int, default=256, help="hidden dimension")
@@ -32,12 +34,32 @@ if __name__ == "__main__":
     # device = torch.device("cpu")
 
     h_dim, z_dim = arg.h_dim, arg.z_dim
+
     model = VAE(h_dim=h_dim, z_dim=z_dim).to(device)
-    results = train_loop(model=model,
-                         train_dataloader=train_dataloader,
-                         epochs=epochs,
-                         lr=lr,
-                         device=device)
-    print(results)
 
+    save_path = Path(arg.save_model)
+    model_name = "VAE.pth"
+    if save_path.is_dir():
+        model.load_state_dict(torch.load(save_path / model_name))
+        train_query = input("Train more? [Y/N] (default N) :")
+        if train_query.upper() == 'Y':
+            results = train_loop(model=model,
+                                 train_dataloader=train_dataloader,
+                                 epochs=epochs,
+                                 lr=lr,
+                                 device=device)
+            torch.save(obj=model.state_dict(), f=save_path / model_name)
 
+    else:
+        save_path.mkdir(parents=True, exist_ok=True)
+        results = train_loop(model=model,
+                             train_dataloader=train_dataloader,
+                             epochs=epochs,
+                             lr=lr,
+                             device=device)
+        torch.save(obj=model.state_dict(), f=save_path / model_name)
+
+    generative_random_image(model,
+                            train_dataloader.dataset,
+                            reversed_transforms,
+                            device)
