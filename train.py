@@ -31,7 +31,7 @@ def train_step(model: nn.Module,
                 print(f"Trained on {len(X) * idx} / {len(train_dataloader.dataset)}")
     with torch.inference_mode():
         total_loss /= len(train_dataloader)
-    print(f"Train loss {total_loss}")
+        print(f"Train loss {total_loss}")
     return total_loss
 
 
@@ -44,7 +44,7 @@ def train_loop(model: nn.Module,
     optimizer = torch.optim.Adam(params=model.parameters(), lr=lr)
     results = {"train_loss": []}
 
-    for epoch in epochs:
+    for epoch in range(epochs):
         print(f"Epoch {epoch}:\n----------\n")
         loss = train_step(model, train_dataloader, loss_fn, optimizer, device)
         results["train_loss"].append(loss)

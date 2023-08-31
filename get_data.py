@@ -1,11 +1,9 @@
 import os
 from typing import Tuple, List
 from pathlib import Path
-
-import torch.cuda
 from torchvision.datasets import MNIST
 from torchvision.transforms import Compose, ToTensor, Lambda
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 
 # Hyperparameter
 BATCH_SIZE = 32
@@ -32,19 +30,19 @@ def create_data(data_dir: str,
     # If true, skip downloading.
     if data_path_dir.is_dir():
         print("Data has been created. Skip downloading...")
-        train_dataset = MNIST(root=data_path_dir,
+        train_dataset = MNIST(root=data_path_dir / "train",
                               train=True,
                               transform=train_transform,
                               download=False,
                               target_transform=None)
 
     else:
-        data_path_dir.mkdir(parents=True, is_exists=True)
+        data_path_dir.mkdir(parents=True, exist_ok=True)
         print(f"Start downloading")
         train_dataset = MNIST(root=data_path_dir / "train",
                               train=True,
                               transform=train_transform,
-                              download=False,
+                              download=True,
                               target_transform=None)
 
         print("Download successfully")
