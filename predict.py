@@ -66,3 +66,4 @@ def visualize_generative_image(vae_model: nn.Module,
             ax.axis("off")
 
     plt.show()
+
