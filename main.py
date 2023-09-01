@@ -51,8 +51,7 @@ def main(arg):
     generative_random_image(model,
                             train_dataloader.dataset,
                             reversed_transforms,
-                            device,
-                            seed=0)
+                            device)
 
 if __name__ == "__main__":
     NUM_WORKERS = os.cpu_count()
@@ -72,4 +71,3 @@ if __name__ == "__main__":
     arg = parser.parse_args()
 
     main(arg)
-    
