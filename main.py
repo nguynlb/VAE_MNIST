@@ -51,7 +51,8 @@ def main(arg):
     generative_random_image(model,
                             train_dataloader.dataset,
                             reversed_transforms,
-                            device)
+                            device,
+                            seed=0)
 
 if __name__ == "__main__":
     NUM_WORKERS = os.cpu_count()
@@ -68,8 +69,7 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", "-e", help="Epochs", type=int, default=16)
     parser.add_argument("--num-workers", "-n", default=NUM_WORKERS)
     parser.add_argument("--load-model", help='Load existing model', default=False)
-
-
     arg = parser.parse_args()
 
     main(arg)
+    
