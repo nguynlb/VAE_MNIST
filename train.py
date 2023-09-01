@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 
 
 def kl_div(mean: torch.Tensor, std: torch.Tensor):
-    return -0.5 * torch.sum(1 + torch.log(std.pow(2)) - mean.pow(2) - std.pow(2))
+    return -torch.sum(1 + torch.log(std.pow(2)) - mean.pow(2) - std.pow(2))
 
 
 def train_step(model: nn.Module,
@@ -18,9 +18,8 @@ def train_step(model: nn.Module,
     total_loss = 0
     for idx, (X, _) in loop_bar:
         X = X.to(device)
-        y_preds, mean, std = model(X)
-        alpha = len(train_dataloader.dataset) / len(X) 
-        loss = alpha * loss_fn(y_preds, X) + kl_div(mean, std)
+        y_preds, mean, std = model(X) 
+        loss = loss_fn(y_preds, X) + kl_div(mean, std)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -39,7 +38,7 @@ def train_loop(model: nn.Module,
                epochs: int,
                lr: float,
                device: torch.device):
-    loss_fn = nn.BCELoss()
+    loss_fn = nn.BCELoss(reduction='sum')
     optimizer = torch.optim.Adam(params=model.parameters(), lr=lr)
     results = {"train_loss": []}
 
