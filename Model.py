@@ -47,8 +47,6 @@ class VAE(nn.Module):
     # MNIST dataset -> so I specify image channel to 1
 
 
-
-
 def check():
     x = torch.ones(1, 1, 28, 28)
     model = VAE(img_shape=28)

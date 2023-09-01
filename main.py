@@ -1,10 +1,10 @@
 import os
+import torch
 from argparse import ArgumentParser
 from get_data import create_data, simple_transform
-import torch.cuda
 from model import VAE
 from train import train_loop
-from predict import generative_random_image
+from predict import save_generative_image, visualize_generative_image
 from pathlib import Path
 
 def main(arg):
@@ -49,26 +49,25 @@ def main(arg):
 
     else:
         if not os.path.exists(save_path): os.mkdir(save_path)
-
         results = train_loop(model=model,
                              train_dataloader=train_dataloader,
                              epochs=epochs,
                              lr=lr,
                              device=device)
         torch.save(obj=model.state_dict(), f=save_path / model_name)
+        print(f"Model has been saved in {save_path / model_name}")
 
     
-    generative_random_image(model,
-                            train_dataloader.dataset,
-                            reversed_transforms,
-                            device)
+    # visualize_dataset(train_dataloader.dataset)
+    visualize_generative_image(model,
+                               train_dataloader.dataset,
+                               device=device)
 
 if __name__ == "__main__":
     NUM_WORKERS = os.cpu_count()
 
     parser = ArgumentParser(description="Config parameter and hyperparameter")
     parser.add_argument("-lr", type=float, default=3e-4)
-    parser.add_argument("--hidden-dim", "-hd", type=int, default=200)
     parser.add_argument("--disable-cuda", "-cpu", default=False, action="store_true")
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--save-model", help="Directory to save model", metavar="L", default="./models")
@@ -78,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument("--z-dim", type=int, default=32, help="latent dimension")
     parser.add_argument("--epochs", "-e", help="Epochs", type=int, default=16)
     parser.add_argument("--num-workers", "-n", default=NUM_WORKERS)
-    parser.add_argument("--load-model", help='Load existing model', default=True)
+    parser.add_argument("--load-model", help='Load existing model', default=False)
     arg = parser.parse_args()
 
     main(arg)
