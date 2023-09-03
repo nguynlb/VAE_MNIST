@@ -44,3 +44,7 @@ python main.py --img-shape 28 --batch-size 64 --epochs 10 --load-model false
 - Loss: 8719.13
 
 ![image](./image/grid.png)
+
+#### Distribution of latent space
+
+![manifold](./image/manifold.png)
