@@ -63,8 +63,9 @@ def train_loop(model: nn.Module,
     """
     loss_fn = nn.BCELoss(reduction='sum')
     optimizer = torch.optim.Adam(params=model.parameters(), lr=lr)
-    results = {"train_loss": []}
-
+    results = {"train_loss": []}    
+    model.to(device)
+    
     for epoch in range(epochs):
         print(f"Epoch {epoch}:\n----------\n")
         loss = train_step(model, train_dataloader, loss_fn, optimizer, device)

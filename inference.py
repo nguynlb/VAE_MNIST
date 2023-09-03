@@ -64,6 +64,34 @@ def visualize_generative_image(vae_model: nn.Module,
             ax = axes[x, y]
             ax.imshow(reconstructor_image.cpu(), cmap='gray')
             ax.axis("off")
-    plt.savefig("./image/grid.png")
+    plt.savefig("./grid.png")
     plt.show()
+
+
+# Visualize Distribute of latent space
+@torch.inference_mode()
+def visualize_manifold_latent_space(model: nn.Module):
+    # Inherit fron https://github.com/ykwon0407/variational_autoencoder/blob/master/variational_bayes.ipynb
+    nx, ny = 20, 20
+    MNIST_SIZE = 28
+    Z_DIM = model.z_dim // 2
+
+    x_grid = torch.linspace(-5, 5, nx)
+    y_grid = torch.linspace(-5, 5, ny)
+    delta = x_grid[1] - x_grid[0]
+    canvas = torch.empty((MNIST_SIZE * nx, MNIST_SIZE * ny))
+
+    model.to("cpu")
+    for i, x in enumerate(x_grid):
+        for j, y in enumerate(y_grid):
+            z = torch.tensor([[x * delta / 2, y + delta / 2] * Z_DIM])
+            recontructor_image = model.decoder(z).squeeze()
+            canvas[MNIST_SIZE * i: MNIST_SIZE * (i + 1), MNIST_SIZE * j: MNIST_SIZE * (j + 1)] = recontructor_image
+
+    plt.figure(figsize=(8,8))
+    plt.imshow(canvas, cmap="gray")
+    plt.axis("off")
+    plt.savefig("./image/manifold.png")
+    plt.show()
+
 

@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from get_data import create_data, simple_transform
 from model import VAE
 from train import train_loop
-from inference import save_generative_image, visualize_generative_image
+from inference import save_generative_image, visualize_generative_image, visualize_manifold_latent_space
 from pathlib import Path
 
 def main(arg):
@@ -28,7 +28,7 @@ def main(arg):
 
     model = VAE(h_dim=h_dim, z_dim=z_dim, img_shape=img_shape).to(device)
     save_path = Path(arg.save_model)
-    model_name = "VAE.pth"
+    model_name = "VAE_2D.pth"
 
     if arg.load_model and os.path.exists(save_path / model_name):
         print(f"Model has been existing. Try to load model")
@@ -62,6 +62,7 @@ def main(arg):
     visualize_generative_image(model,
                                train_dataloader.dataset,
                                device=device)
+    visualize_manifold_latent_space(model)
 
 if __name__ == "__main__":
     NUM_WORKERS = os.cpu_count()
