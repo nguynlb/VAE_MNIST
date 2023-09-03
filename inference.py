@@ -64,6 +64,6 @@ def visualize_generative_image(vae_model: nn.Module,
             ax = axes[x, y]
             ax.imshow(reconstructor_image.cpu(), cmap='gray')
             ax.axis("off")
-
+    plt.savefig("./image/grid.png")
     plt.show()
 

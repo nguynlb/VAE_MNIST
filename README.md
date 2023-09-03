@@ -40,4 +40,7 @@ python main.py --img-shape 28 --batch-size 64 --epochs 10 --load-model false
 
 ## Experience
 
+- Epochs: 16
+- Loss: 8719.13
+
 ![image](./image/grid.png)
