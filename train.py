@@ -2,11 +2,11 @@ import torch
 import torch.nn as nn
 from tqdm.auto import tqdm
 from torch.utils.data import DataLoader
-
 from typing import Dict
 
+
 def kl_div(mean: torch.Tensor, std: torch.Tensor):
-    return -torch.sum(1 + torch.log(std.pow(2)) - mean.pow(2) - std.pow(2))
+    return -torch.sum(1 + torch.log(1e-8 + std.pow(2)) - mean.pow(2) - std.pow(2))
 
 
 def train_step(model: nn.Module,
